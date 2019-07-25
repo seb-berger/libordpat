@@ -1,0 +1,4 @@
+*.mex*
+*.so*
+*.o
+__pycache__
