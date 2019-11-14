@@ -5,9 +5,9 @@ Copyright (c) 2019, Sebastian Berger.
 
 Berger S, Kravtsiv A, Schneider G, Jordan D.\
 Teaching Ordinal Patterns to a Computer.\
-*Entropy*. **2019**; xx(xx):xxx.
+*Entropy*. **2019**; 21(10):1023.
 
-https://doi.org/xx.xxxx/xxxxxxxxx
+https://doi.org/10.3390/e21101023
 
 
 # 0. Change Log
@@ -175,9 +175,9 @@ Then, proceed by copying `libordpat.dll` to some directory where the system can 
 
 # 4. Literature
 
-[1.][Berger2019] Berger S, Kravtsiv A, Schneider G, Jordan D. Teaching Ordinal Patterns to a Computer. *Entropy*. **2019**; xx(xx):xxx.
+[1.][Berger2019] Berger S, Kravtsiv A, Schneider G, Jordan D. Teaching Ordinal Patterns to a Computer. *Entropy*. **2019**; 21(10):1023.
 
 [2.][Bandt2002] Bandt C, Pompe B. Permutation Entropy: A Natural Complexity Measure for Time Series. *Phys. Rev. Lett.* **2002**; 88(17):174102.
 
-[Berger2019]: gtps://doi.org/tobeannounced
+[Berger2019]: https://doi.org/10.3390/e21101023
 [Bandt2002]: https://doi.org/10.1103/PhysRevLett.88.174102

@@ -5,8 +5,8 @@
 #
 #  [1] Berger S, Kravtsiv A, Schneider G, Jordan D.
 #      Teaching Ordinal Patterns to a Computer.
-#      Entropy. 2019; xx(xx):xxx.
-#      https://doi.org/xx.xxxx/xxxxxxxxx
+#      Entropy. 2019; 21(10):1023.
+#      https://doi.org/10.3390/e21101023
 
 #  Copyright (c) 2019, Sebastian Berger.
 #
