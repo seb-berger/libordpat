@@ -20,14 +20,13 @@ This is the initial version.
 
 This is **libordpat** [1], a cross-platform software library for extracting and encoding ordinal patterns [2] from time series.
 It was successfully tested to run on **Windows**, **macOS** and **GNU/Linux**.
-It is written to be easily portable to other platforms as well, should such need ever arise.
+It is designed to be easily portable to other platforms as well, should such need ever arise.
 Apart from being a C function library, **libordpat** can also be used from within **MATLAB**, as well as **GNU Octave** and **NumPy/Python**.
 
 
 ## 1.1. Ordinal Patterns
 
 The ordinal pattern of an m-tuple of real numbers (x[1], x[2], ..., x[m]) describes how the tuple elements relate to one another in terms of position and value. For example, it holds for the tuple of natural numbers (17, 7, 8) that *"there are three elements, the first is the greatest, the second is the least"*.
-
 Thus, its ordinal pattern can be represented by a tuple of ranks (3, 1, 2). Its length m ϵ {2, 3, ... } is called the *order* of the ordinal pattern, and for a given order m, there are m! pairwise distinct ordinal patterns.
 
 **libordpat** assigns to each ordinal pattern an integer number in {0, 1, ..., m!}, such that the lexicographical sorting order of the tuple of ranks is preserved. For instance, the mapping applied for m = 3 is:
@@ -45,7 +44,7 @@ The library operates on real-valued time series {x[t]}, where t ϵ {1, 2, ..., N
 
 {(x[t], x[t + τ], ..., x[t + (m - 1)τ])} with t ϵ {1, 2, ..., N - (m - 1)τ}.
 
-Each of these embedding vector is then analysed with regard to its ordinal pattern, and each ordinal pattern is encoded into an integer in {0, 1, ..., m! - 1}. Thus, processing a time series of N elements results in a sequence of
+Each of these embedding vectors is then analysed with regard to its ordinal pattern, and each ordinal pattern is encoded into an integer in {0, 1, ..., m! - 1}. Thus, processing a time series of N elements results in a sequence of
 
 N' = N - (m - 1)τ
 
@@ -100,11 +99,11 @@ to obtain in `y` the sequence of ordinal patterns of order m = 5 and time lag τ
 If this succeeds, you have all the encoding functions provided by **libordpat** under your control from within the MATLAB environment. For example, you can then write
 ```matlab
 >> x = randn(1000, 1);
->> y = ordpat(x, 42, 1, 'overlap_mp_c');
+>> y = ordpat(x, 42, 3, 'overlap_mp_c');
 ```
-to encode `x` into a sequence of ordinal patterns of order m = 42 by means of the `overlap_mp` algorithm.
+to encode `x` into a sequence of ordinal patterns of order m = 42 and time lag τ = 3 by means of the `overlap_mp` algorithm.
 
-**Troubleshooting MEX:** If the call to `ordpat --make` fails, MEX is probably not configured correctly. Maybe you do not have a supported C compiler installed? On Windows, we recommend using MinGW-w64, a GNU C/C++ tool chain for Windows. It is available from *The Mathworks* as an official MATLAB Add-On. On macOS, you need to download and install Apple Xcode (including the command line tools). On GNU/Linux, the GNU tool chain typically comes pre-installed. However, MATLAB may issue some warnings about your version of GCC being not supported: so far, we saw great results with ignoring those warnings.
+**Troubleshooting MEX:** If the call to `ordpat --make` fails, MEX is probably not configured correctly. Maybe you do not have a supported C compiler installed? On Windows, we recommend using MinGW-w64, a GNU C/C++ tool chain for Windows. It is available from Mathworks as an official MATLAB Add-On. On macOS, you need to download and install Apple Xcode (including the command line tools). On GNU/Linux, the GNU tool chain typically comes pre-installed. However, MATLAB may issue some warnings about your version of GCC being not supported: so far, we saw great results with ignoring those warnings.
 
 
 ## 2.2. GNU Octave
@@ -114,7 +113,7 @@ to encode `x` into a sequence of ordinal patterns of order m = 42 by means of th
 
 ## 2.3. NumPy/Python
 
-**libordpat** was successfully tested on **CPython**, and works with Python versions 2.7 and 3. Besides Python itself, only **NumPy** needs to be installed. For the time being, we do not provide any packaging scripts (but this will change in the future). Thus, to get **libordpat** going on Python:
+**libordpat** was successfully tested on **CPython**, and works with Python versions 2.7 and 3. Besides Python itself, only **NumPy** needs to be installed. For the time being, we do not provide any packaging scripts. Thus, to get **libordpat** going on Python:
 
 * Add `./py/` in the **libordpat** directory structure to your `sys.path`.
 * Invoke `import ordpat`.
@@ -130,9 +129,9 @@ import ordpat
 x = np.random.randn((1, 1000))
 y = ordpat.ordpat(x, 5, 2, "vectorised")
 ```
-to create a vector of 1000 random numbers, and turn those numbers into a sequence of ordinal patterns of order m = 5, using the time lag τ = 1. Invoke `help("ordpat")` from an interactive Python prompt to get further information.
+to create a vector of 1000 random numbers, and turn those numbers into a sequence of ordinal patterns of order m = 5, using the time lag τ = 2. Invoke `help("ordpat")` from an interactive Python prompt to get further information.
 
-**Note**: If during module import, the module `ordpat` module finds `libordpat.so` (or `libordpat.dylib`, or `libordpat.dll`) in the system's library search path, all encoding functions from the C library will also be available. On Windows, the easiest way of adding `libordpat.dll` to the search path is to copy it right next to `ordpat.py`.
+**Note**: If during import, the `ordpat` module finds `libordpat.so` (or `libordpat.dylib`, or `libordpat.dll`) in the system's library search path, all encoding functions from the C library will also be available. On Windows, the easiest way of adding `libordpat.dll` to the search path is to copy it right next to `ordpat.py`.
 
 
 # 3. Building the C library
@@ -140,7 +139,7 @@ to create a vector of 1000 random numbers, and turn those numbers into a sequenc
 **libordpat** was developed, optimised and tested using the **GNU Compiler Collection** (GCC) exclusively. The C code is compliant with the C99 standard, and does not use any features specific to a single operating system. No external libraries (except for the C standard runtime) are required. Thus, porting to a different platform should be possible with minimal effort.
 
 
-### 3.1. macOS and GNU/Linux
+### 3.1. GNU/Linux and macOS
 
 On GNU/Linux, the GNU tool chain for building C code is typically pre-installed. If not, please obtain GCC and GNU make from your distributors' package repositories.
 
