@@ -4,7 +4,7 @@ Version 0.1.0\
 Copyright (c) 2019, Sebastian Berger.
 
 Berger S, Kravtsiv A, Schneider G, Jordan D.\
-Teaching Ordinal Patterns to a Computer.\
+Teaching Ordinal Patterns to a Computer: Efficient Encoding Algorithms Based on the Lehmer Code\
 *Entropy*. **2019**; 21(10):1023.
 
 https://doi.org/10.3390/e21101023
@@ -175,7 +175,7 @@ Then, proceed by copying `libordpat.dll` to some directory where the system can 
 
 # 4. Literature
 
-[1.][Berger2019] Berger S, Kravtsiv A, Schneider G, Jordan D. Teaching Ordinal Patterns to a Computer. *Entropy*. **2019**; 21(10):1023.
+[1.][Berger2019] Berger S, Kravtsiv A, Schneider G, Jordan D. Teaching Ordinal Patterns to a Computer: Efficient Encoding Algorithms Based on the Lehmer Code. *Entropy*. **2019**; 21(10):1023.
 
 [2.][Bandt2002] Bandt C, Pompe B. Permutation Entropy: A Natural Complexity Measure for Time Series. *Phys. Rev. Lett.* **2002**; 88(17):174102.
 

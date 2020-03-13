@@ -5,8 +5,8 @@
  * For a detailed description of the algorithms used, see the article:
  *
  * [1] Berger S, Kravtsiv A, Schneider G, Jordan D.
- *     Teaching Ordinal Patterns to a Computer.
- *     Entropy. 2019; 21(10):1023.
+ *     Teaching Ordinal Patterns to a Computer: Efficient Encoding
+ *     Algorithms Based on the Lehmer Code. Entropy. 2019; 21(10):1023.
  *     https://doi.org/10.3390/e21101023
  */
 
