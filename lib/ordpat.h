@@ -125,11 +125,9 @@ ORDPAT_API size_t ordpat_pattern_width(unsigned int ord);
  *
  * Create a lookup table for the 'lookup' encoding algorithm (see [1]).
  *
- * Orders 1 < @ord < 11, and any time lag @lag > 0 are supported.
- *
  * The array @table needs to be pre-allocated to @len = factorial(@ord) * @ord
- * elements. On return of the function, the @table will contain values between
- * 0 and factorial(@ord) - 1 exclusively. In particular, it is initialised
+ * elements. On return of the function, @table will contain values between
+ * 0 and factorial(@ord) - 1 exclusively. In particular, @table is initialised
  * such that
  *
  *     @n_1 = @table[@n_0 * @ord + @inv_count],
@@ -138,6 +136,8 @@ ORDPAT_API size_t ordpat_pattern_width(unsigned int ord);
  * @n_1 is the ordinal pattern of the subsequent tuple (x_1, x_2, ..., x_@ord),
  * and @inv_count is the number of left inversions of x_@ord with regard to
  * x_1, x_2, ..., x_{@ord - 1}.
+ *
+ * Pattern orders 1 < @ord < 11 are supported.
  *
  * The function returns 0 on success, or one of the positive error codes
  * defined by @ordpat_error.
