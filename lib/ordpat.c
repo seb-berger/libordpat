@@ -56,6 +56,7 @@
  *
  * Return the number of ordinal patterns that a time series of length @n_in
  * will yield when transformed using the pattern order @ord and time lag @lag.
+ * The order @ord must be at least 2, the time lag @lag must not be zero.
  */
 
 static size_t sequence_length(size_t       n_in,
@@ -148,7 +149,7 @@ static uint64_t encode_pattern(const double *in,
  * Perform a multi-precision non-negative integer addition.
  *
  * The function adds @op to the value pointed to by @dst. If the addition
- * overflows, a carry value '1' is added to the value pointed to by (@dst + 1).
+ * overflows, a carry value 1 is added to the value pointed to by (@dst + 1).
  * This procedure is repeated until no overflow occurs.
  *
  * Thus, the function interprets @dst as an array of uint64 values, with each
@@ -157,7 +158,7 @@ static uint64_t encode_pattern(const double *in,
  *
  *     @dst[0] for the bits   0 to  63,
  *     @dst[1] for the bits  64 to 127,
- *     @dst[2] for the bits 128 to 191
+ *     @dst[2] for the bits 128 to 191,
  *
  * and so forth.
  *
@@ -183,7 +184,7 @@ static void add_mp(uint64_t *dst,
  * Perform a multi-precision non-negative integer subtraction.
  *
  * The function subtracts @op from the value pointed to by @dst. If the
- * subtraction underflows, a carry value '1' is subtracted from the value
+ * subtraction underflows, a carry value 1 is subtracted from the value
  * pointed to by (@dst + 1). This procedure is repeated until no underflow
  * occurs.
  *
@@ -193,7 +194,7 @@ static void add_mp(uint64_t *dst,
  *
  *     @dst[0] for the bits   0 to  63,
  *     @dst[1] for the bits  64 to 127,
- *     @dst[2] for the bits 128 to 191
+ *     @dst[2] for the bits 128 to 191,
  *
  * and so forth.
  *
@@ -226,13 +227,13 @@ static void subtract_mp(uint64_t *dst,
  *
  *     @dst[0] for the bits   0 to  63,
  *     @dst[1] for the bits  64 to 127,
- *     @dst[2] for the bits 128 to 191
+ *     @dst[2] for the bits 128 to 191,
  *
  * and so forth.
  *
- * The result will silently be truncated to its lowest (@n times 64) bit, that
- * is, overflow will wrap around in a 'modulo-like' manner.
- *
+ * It is the caller's responsibility that the array pointed to by @dst is big
+ * enough to store the overall result. Unbounded memory access will otherwise
+ * occur.
  */
 
 static void multiply_mp(uint64_t *dst,
