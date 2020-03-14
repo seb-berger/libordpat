@@ -72,7 +72,7 @@
         #define ORDPAT_API
     #endif
 #else
-    #error Unknown platform.
+    #error "Unknown platform."
 #endif
 
 #ifdef __cplusplus
