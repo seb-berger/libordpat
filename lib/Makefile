@@ -56,7 +56,7 @@ endif
 endif
 
 ifdef WIN32
-RM := del 2> NUL
+RM := del /F 2> NUL
 else
 RM := rm -f
 endif
