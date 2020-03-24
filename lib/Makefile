@@ -1,48 +1,48 @@
-#  libordpat - A function library for extracting and encoding
-#              ordinal patterns from time series.
+# libordpat - A function library for extracting and encoding
+#             ordinal patterns from time series.
 #
-#  For a detailed description of the algorithms used, see the article:
+# For a detailed description of the algorithms used, see the article:
 #
-#  [1] Berger S, Kravtsiv A, Schneider G, Jordan D.
-#      Teaching Ordinal Patterns to a Computer: Efficient Encoding
-#      Algorithms Based on the Lehmer Code. Entropy. 2019; 21(10):1023.
-#      https://doi.org/10.3390/e21101023
+# [1] Berger S, Kravtsiv A, Schneider G, Jordan D.
+#     Teaching Ordinal Patterns to a Computer: Efficient Encoding
+#     Algorithms Based on the Lehmer Code. Entropy. 2019; 21(10):1023.
+#     https://doi.org/10.3390/e21101023
 
-#  Copyright (c) 2019, Sebastian Berger.
+# Copyright (c) 2019, Sebastian Berger.
 #
-#  Klinikum rechts der Isar der
-#  Technischen Universitaet Muenchen
-#  Munich, Germany
+# Klinikum rechts der Isar der
+# Technischen Universitaet Muenchen
+# Munich, Germany
 #
-#  All rights reserved.
+# All rights reserved.
 #
-#  Redistribution and use in source and binary forms, with or without
-#  modification, are permitted provided that the following conditions are
-#  met:
-#      * Redistributions of source code must retain the above copyright
-#        notice, this list of conditions and the following disclaimer.
-#      * Redistributions in binary form must reproduce the above copyright
-#        notice, this list of conditions and the following disclaimer in
-#        the documentation and/or other materials provided with the
-#        distribution.
-#      * Neither the names of the copyright holders nor the names of its
-#        contributors may be used to endorse or promote products derived
-#        from this software without specific prior written permission.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in
+#       the documentation and/or other materials provided with the
+#       distribution.
+#     * Neither the names of the copyright holders nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
 #
-#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR
-#  THE KLINIKUM RECHTS DER ISAR BE LIABLE FOR ANY DIRECT, INDIRECT,
-#  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-#  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-#  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-#  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-#  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-#  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-#  DAMAGE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR
+# THE KLINIKUM RECHTS DER ISAR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+# AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+# THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+# DAMAGE.
 
-#  Platform
+# Platform
 ifeq ($(OS), Windows_NT)
 WIN32 := 1
 else
@@ -61,7 +61,7 @@ else
 RM := rm -f
 endif
 
-#  Configuration
+# Configuration
 MAJ_VER         := 0
 MIN_VER         := 1
 REV_VER         := 0
@@ -105,7 +105,7 @@ endif
 
 LDFLAGS_DEBUG   := -g
 
-#  Architecture
+# Architecture
 ARCH ?= x64
 ifeq ($(ARCH), x86)
 CFLAGS  += -m32
@@ -119,7 +119,7 @@ $(error Unsupported target architecture: '$(ARCH)')
 endif
 endif
 
-#  Debug/Release
+# Debug/Release
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
 CFLAGS  += $(CFLAGS_DEBUG)
@@ -129,7 +129,7 @@ CFLAGS  += $(CFLAGS_RELEASE)
 LDFLAGS += $(LDFLAGS_RELEASE)
 endif
 
-#  Targets
+# Targets
 $(TARGET): ordpat.o
 	@$(CC) $(LDFLAGS) -o $@ ordpat.o
 
