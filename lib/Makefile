@@ -42,6 +42,12 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 # DAMAGE.
 
+# Version information
+MAJ_VER = 0
+MIN_VER = 1
+REV_VER = 0
+LIB_VER := $(MAJ_VER).$(MIN_VER).$(REV_VER)
+
 # Platform
 ifeq ($(OS), Windows_NT)
 WIN32 := 1
@@ -62,11 +68,6 @@ RM := rm -f
 endif
 
 # Configuration
-MAJ_VER         := 0
-MIN_VER         := 1
-REV_VER         := 0
-LIB_VER         := $(MAJ_VER).$(MIN_VER).$(REV_VER)
-
 CC              := gcc
 PREFIX          ?= /usr/local
 LIBRARY_NAME    := libordpat
