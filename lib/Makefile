@@ -69,21 +69,21 @@ LIB_VER         := $(MAJ_VER).$(MIN_VER).$(REV_VER)
 
 CC              := gcc
 PREFIX          ?= /usr/local
-LIBRARY_NAME    := ordpat
+LIBRARY_NAME    := libordpat
 
 ifdef WIN32
-TARGET          := lib$(LIBRARY_NAME).dll
+TARGET          := $(LIBRARY_NAME).dll
 SHORTNAME       := $(TARGET)
 endif
 
 ifdef OSX
-TARGET          := lib$(LIBRARY_NAME).dylib
+TARGET          := $(LIBRARY_NAME).dylib
 SHORTNAME       := $(TARGET)
 endif
 
 ifdef LINUX
-TARGET          := lib$(LIBRARY_NAME).so.$(LIB_VER)
-SHORTNAME       := lib$(LIBRARY_NAME).so.$(MAJ_VER)
+TARGET          := $(LIBRARY_NAME).so.$(LIB_VER)
+SHORTNAME       := $(LIBRARY_NAME).so.$(MAJ_VER)
 endif
 
 ifndef TARGET
@@ -99,7 +99,7 @@ LDFLAGS         := -dynamiclib -current_version $(LIB_VER) \
                    -compatibility_version $(MAJ_VER)
 LDFLAGS_RELEASE := -O3
 else
-LDFLAGS         := -shared -Wl,-soname,lib$(LIBRARY_NAME).so.$(MAJ_VER)
+LDFLAGS         := -shared -Wl,-soname,$(LIBRARY_NAME).so.$(MAJ_VER)
 LDFLAGS_RELEASE := -O3 -s
 endif
 
@@ -140,7 +140,7 @@ clean:
 	@$(RM) *.o
 
 distclean: clean
-	@$(RM) lib$(LIBRARY_NAME).*
+	@$(RM) $(LIBRARY_NAME).*
 
 install: $(TARGET)
 ifndef WIN32
@@ -148,7 +148,7 @@ ifndef WIN32
 	@install --mode=644 ./ordpat.h $(PREFIX)/include/
 	@install -d $(PREFIX)/lib/
 	@install $(TARGET) $(PREFIX)/lib/
-	@ln -fs $(PREFIX)/lib/$(TARGET) $(PREFIX)/lib/lib$(LIBRARY_NAME).so
+	@ln -fs $(PREFIX)/lib/$(TARGET) $(PREFIX)/lib/$(LIBRARY_NAME).so
 	@ldconfig
 endif
 
@@ -156,8 +156,8 @@ uninstall:
 ifndef WIN32
 	@$(RM) $(PREFIX)/include/ordpat.h
 	@$(RM) $(PREFIX)/lib/$(TARGET)
-	@if ! [ -e $$(readlink $(PREFIX)/lib/lib$(LIBRARY_NAME).so) ]; then \
-	$(RM) $(PREFIX)/lib/lib$(LIBRARY_NAME).so; \
+	@if ! [ -e $$(readlink $(PREFIX)/lib/$(LIBRARY_NAME).so) ]; then \
+	$(RM) $(PREFIX)/lib/$(LIBRARY_NAME).so; \
 	fi
 	@ldconfig
 endif
