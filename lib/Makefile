@@ -42,6 +42,9 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 # DAMAGE.
 
+# Do not use built-in rules and variables
+MAKEFLAGS = rR
+
 # Version information
 MAJ_VER = 0
 MIN_VER = 1
