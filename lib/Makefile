@@ -52,6 +52,10 @@ REV_VER = 0
 LIB_VER := $(MAJ_VER).$(MIN_VER).$(REV_VER)
 
 # Platform
+override undefine LINUX
+override undefine OSX
+override undefine WIN32
+
 ifeq ($(OS), Windows_NT)
 WIN32 := 1
 else
