@@ -98,19 +98,13 @@ ifdef LINUX
 endif
 
 CFLAGS := -std=c99 -fPIC -Wall -Wextra -pedantic -DBUILD_LIBORDPAT
-CFLAGS_DEBUG := -g
-CFLAGS_RELEASE := -O3 -fvisibility=hidden
 
 ifdef OSX
     LDFLAGS := -dynamiclib -current_version $(LIB_VER) \
                -compatibility_version $(MAJ_VER)
-    LDFLAGS_RELEASE := -O3
 else
     LDFLAGS := -shared -Wl,-soname,$(LIBRARY_NAME).so.$(MAJ_VER)
-    LDFLAGS_RELEASE := -O3 -s
 endif
-
-LDFLAGS_DEBUG := -g
 
 # Architecture
 ARCH ?= x64
@@ -129,11 +123,15 @@ endif
 # Debug/Release
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
-    CFLAGS += $(CFLAGS_DEBUG)
-    LDFLAGS += $(LDFLAGS_DEBUG)
+    CFLAGS += -g -O0
+    LDFLAGS += -g -O0
 else
-    CFLAGS += $(CFLAGS_RELEASE)
-    LDFLAGS += $(LDFLAGS_RELEASE)
+    CFLAGS += -O3 -fvisibility=hidden
+    ifdef OSX
+        LDFLAGS += -O3
+    else
+        LDFLAGS += -O3 -s
+    endif
 endif
 
 # Targets
