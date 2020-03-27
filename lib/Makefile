@@ -113,6 +113,7 @@ ifdef LINUX
     $(TARGET):  LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
 
     ifneq ($(DEBUG), 1)
+        $(LIB_OBJ): CFLAGS += -fvisibility=hidden
         $(TARGET): LDFLAGS += -s
     endif
 
@@ -126,6 +127,11 @@ ifdef OSX
     $(LIB_OBJ): CFLAGS  += -fPIC
     $(TARGET):  LDFLAGS += -dynamiclib -current_version $(LIB_VER) \
                            -compatibility_version $(MAJ_VER)
+
+    ifneq ($(DEBUG), 1)
+        $(LIB_OBJ): CFLAGS += -fvisibility=hidden
+    endif
+
     RM := rm -f
 endif
 
