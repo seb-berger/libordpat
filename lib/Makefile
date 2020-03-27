@@ -160,10 +160,10 @@ ordpat.o: ordpat.c ordpat.h
 	@$(CC) $(CFLAGS) -o $@ -c ordpat.c
 
 clean:
-	@$(RM) *.o
+	@$(RM) $(LIB_OBJ)
 
 distclean: clean
-	@$(RM) $(LIB_NAME).*
+	@$(RM) $(TARGET)
 
 install: $(TARGET)
 # TODO: Add macOS support
