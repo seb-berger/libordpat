@@ -166,7 +166,8 @@ distclean: clean
 	@$(RM) $(LIB_NAME).*
 
 install: $(TARGET)
-ifndef WIN32
+# TODO: Add macOS support
+ifdef LINUX
 	@install -d $(PREFIX)/include/
 	@install --mode=644 ./ordpat.h $(PREFIX)/include/
 	@install -d $(PREFIX)/lib/
@@ -176,11 +177,12 @@ ifndef WIN32
 endif
 
 uninstall:
-ifndef WIN32
+# TODO: Add macOS support
+ifdef LINUX
 	@$(RM) $(PREFIX)/include/ordpat.h
 	@$(RM) $(PREFIX)/lib/$(TARGET)
 	@if ! [ -e $$(readlink $(PREFIX)/lib/$(LIB_NAME).so) ]; then \
-	$(RM) $(PREFIX)/lib/$(LIB_NAME).so; \
+	    $(RM) $(PREFIX)/lib/$(LIB_NAME).so; \
 	fi
 	@ldconfig
 endif
