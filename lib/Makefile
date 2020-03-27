@@ -61,7 +61,7 @@ LIB_VER   := $(MAJ_VER).$(MIN_VER).$(REV_VER)
 
 # Prepare Build Environment ####################################################
 
-$(LIB_OBJ): CFLAGS += -fPIC -DBUILD_LIBORDPAT
+$(LIB_OBJ): CFLAGS += -DBUILD_LIBORDPAT
 
 # Architecture
 ifeq ($(ARCH), x86)
@@ -109,7 +109,8 @@ endif
 ifdef LINUX
     TARGET := $(LIB_NAME).so.$(LIB_VER)
     SHORTNAME := $(LIB_NAME).so.$(MAJ_VER)
-    $(TARGET): LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
+    $(LIB_OBJ): CFLAGS  += -fPIC
+    $(TARGET):  LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
 
     ifneq ($(DEBUG), 1)
         $(TARGET): LDFLAGS += -s
@@ -122,8 +123,9 @@ endif
 ifdef OSX
     TARGET := $(LIB_NAME).dylib
     SHORTNAME := $(TARGET)
-    $(TARGET): LDFLAGS += -dynamiclib -current_version $(LIB_VER) \
-                          -compatibility_version $(MAJ_VER)
+    $(LIB_OBJ): CFLAGS  += -fPIC
+    $(TARGET):  LDFLAGS += -dynamiclib -current_version $(LIB_VER) \
+                           -compatibility_version $(MAJ_VER)
     RM := rm -f
 endif
 
@@ -131,7 +133,7 @@ endif
 ifdef WIN32
     TARGET := $(LIB_NAME).dll
     SHORTNAME := $(TARGET)
-    $(TARGET): LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
+    $(TARGET): LDFLAGS += -shared
 
     ifneq ($(DEBUG), 1)
         $(TARGET): LDFLAGS += -s
