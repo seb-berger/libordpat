@@ -81,6 +81,7 @@ endif
 CC := gcc
 PREFIX ?= /usr/local
 LIBRARY_NAME := libordpat
+LIB_OBJ := ordpat.o
 
 ifdef WIN32
     TARGET := $(LIBRARY_NAME).dll
@@ -97,13 +98,14 @@ ifdef LINUX
     SHORTNAME := $(LIBRARY_NAME).so.$(MAJ_VER)
 endif
 
-CFLAGS := -std=c99 -fPIC -Wall -Wextra -pedantic -DBUILD_LIBORDPAT
+CFLAGS := -std=c99 -Wall -Wextra -pedantic
+$(LIB_OBJ): CFLAGS += -fPIC -DBUILD_LIBORDPAT
 
 ifdef OSX
-    LDFLAGS := -dynamiclib -current_version $(LIB_VER) \
-               -compatibility_version $(MAJ_VER)
+    $(TARGET): LDFLAGS := -dynamiclib -current_version $(LIB_VER) \
+                          -compatibility_version $(MAJ_VER)
 else
-    LDFLAGS := -shared -Wl,-soname,$(LIBRARY_NAME).so.$(MAJ_VER)
+    $(TARGET): LDFLAGS := -shared -Wl,-soname,$(LIBRARY_NAME).so.$(MAJ_VER)
 endif
 
 # Architecture
@@ -126,17 +128,17 @@ ifeq ($(DEBUG), 1)
     CFLAGS += -g -O0
     LDFLAGS += -g -O0
 else
-    CFLAGS += -O3 -fvisibility=hidden
-    ifdef OSX
-        LDFLAGS += -O3
-    else
-        LDFLAGS += -O3 -s
+    CFLAGS += -O3
+    $(LIB_OBJ): CFLAGS += -fvisibility=hidden
+    LDFLAGS += -O3
+    ifndef OSX
+        $(TARGET): LDFLAGS += -s
     endif
 endif
 
 # Targets
-$(TARGET): ordpat.o
-	@$(CC) $(LDFLAGS) -o $@ ordpat.o
+$(TARGET): $(LIB_OBJ)
+	@$(CC) $(LDFLAGS) -o $@ $?
 
 ordpat.o: ordpat.c ordpat.h
 	@$(CC) $(CFLAGS) -c -o $@ ordpat.c
