@@ -87,7 +87,7 @@ endif
 
 # OS detection
 override undefine LINUX  # make sure that all three
-override undefine OSX    # of these are initially
+override undefine MACOS  # of these are initially
 override undefine WIN32  # undefined
 
 ifeq ($(OS), Windows_NT)
@@ -95,7 +95,7 @@ ifeq ($(OS), Windows_NT)
 else
     KERNEL := $(shell uname -s)
     ifeq ($(KERNEL), Darwin)
-        OSX := 1
+        MACOS := 1
     else
         ifeq ($(KERNEL), Linux)
             LINUX := 1
@@ -121,7 +121,7 @@ ifdef LINUX
 endif
 
 # Settings for macOS
-ifdef OSX
+ifdef MACOS
     TARGET := $(LIB_NAME).dylib
     SHORTNAME := $(TARGET)
     $(LIB_OBJ): CFLAGS  += -fPIC
