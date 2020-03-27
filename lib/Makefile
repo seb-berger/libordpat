@@ -42,19 +42,53 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 # DAMAGE.
 
-# Do not use built-in rules and variables
-MAKEFLAGS = rR
+# Configuration ################################################################
 
-# Version information
-MAJ_VER = 0
-MIN_VER = 1
-REV_VER = 0
-LIB_VER := $(MAJ_VER).$(MIN_VER).$(REV_VER)
+CC        := gcc
+PREFIX    ?= /usr/local
+ARCH      ?= x64
+DEBUG     ?= 0
+CFLAGS    := -std=c99 -Wall -Wextra -pedantic
+LDFLAGS   := # will be populated below
+LIB_NAME  := libordpat
+LIB_OBJ   := ordpat.o
+MAKEFLAGS := rR # do not use built-in rules or variables
+MAJ_VER   := 0
+MIN_VER   := 1
+REV_VER   := 0
+LIB_VER   := $(MAJ_VER).$(MIN_VER).$(REV_VER)
 
-# Platform
-override undefine LINUX
-override undefine OSX
-override undefine WIN32
+
+# Prepare Build Environment ####################################################
+
+$(LIB_OBJ): CFLAGS += -fPIC -DBUILD_LIBORDPAT
+
+# Architecture
+ifeq ($(ARCH), x86)
+    CFLAGS  += -m32
+    LDFLAGS += -m32
+else
+    ifeq ($(ARCH), x64)
+        CFLAGS  += -m64
+        LDFLAGS += -m64
+    else
+        $(error Unsupported target architecture: '$(ARCH)')
+    endif
+endif
+
+# Debug/Release
+ifeq ($(DEBUG), 0)
+    CFLAGS  += -O3
+    LDFLAGS += -O3
+else
+    CFLAGS  += -g -O0
+    LDFLAGS += -g -O0
+endif
+
+# OS detection
+override undefine LINUX  # make sure that all three
+override undefine OSX    # of these are initially
+override undefine WIN32  # undefined
 
 ifeq ($(OS), Windows_NT)
     WIN32 := 1
@@ -71,83 +105,57 @@ else
     endif
 endif
 
-ifdef WIN32
-    RM := del /F 2> NUL
-else
+# Settings for Linux
+ifdef LINUX
+    TARGET := $(LIB_NAME).so.$(LIB_VER)
+    SHORTNAME := $(LIB_NAME).so.$(MAJ_VER)
+    $(TARGET): LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
+
+    ifneq ($(DEBUG), 1)
+        $(TARGET): LDFLAGS += -s
+    endif
+
     RM := rm -f
 endif
 
-# Configuration
-CC := gcc
-PREFIX ?= /usr/local
-LIBRARY_NAME := libordpat
-LIB_OBJ := ordpat.o
-
-ifdef WIN32
-    TARGET := $(LIBRARY_NAME).dll
-    SHORTNAME := $(TARGET)
-endif
-
+# Settings for macOS
 ifdef OSX
-    TARGET := $(LIBRARY_NAME).dylib
+    TARGET := $(LIB_NAME).dylib
     SHORTNAME := $(TARGET)
-endif
-
-ifdef LINUX
-    TARGET := $(LIBRARY_NAME).so.$(LIB_VER)
-    SHORTNAME := $(LIBRARY_NAME).so.$(MAJ_VER)
-endif
-
-CFLAGS := -std=c99 -Wall -Wextra -pedantic
-$(LIB_OBJ): CFLAGS += -fPIC -DBUILD_LIBORDPAT
-
-ifdef OSX
-    $(TARGET): LDFLAGS := -dynamiclib -current_version $(LIB_VER) \
+    $(TARGET): LDFLAGS += -dynamiclib -current_version $(LIB_VER) \
                           -compatibility_version $(MAJ_VER)
-else
-    $(TARGET): LDFLAGS := -shared -Wl,-soname,$(LIBRARY_NAME).so.$(MAJ_VER)
+    RM := rm -f
 endif
 
-# Architecture
-ARCH ?= x64
-ifeq ($(ARCH), x86)
-    CFLAGS += -m32
-    LDFLAGS += -m32
-else
-    ifeq ($(ARCH), x64)
-        CFLAGS += -m64
-        LDFLAGS += -m64
-    else
-        $(error Unsupported target architecture: '$(ARCH)')
-    endif
-endif
+# Settings for Windows
+ifdef WIN32
+    TARGET := $(LIB_NAME).dll
+    SHORTNAME := $(TARGET)
+    $(TARGET): LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
 
-# Debug/Release
-DEBUG ?= 0
-ifeq ($(DEBUG), 1)
-    CFLAGS += -g -O0
-    LDFLAGS += -g -O0
-else
-    CFLAGS += -O3
-    $(LIB_OBJ): CFLAGS += -fvisibility=hidden
-    LDFLAGS += -O3
-    ifndef OSX
+    ifneq ($(DEBUG), 1)
         $(TARGET): LDFLAGS += -s
     endif
+
+    RM := del /F 2> NUL
 endif
 
-# Targets
+
+# Targets ######################################################################
+
+.DEFAULT_GOAL := $(TARGET)
+
 $(TARGET): $(LIB_OBJ)
 	@$(CC) $(LDFLAGS) -o $@ $?
 
 ordpat.o: ordpat.c ordpat.h
-	@$(CC) $(CFLAGS) -c -o $@ ordpat.c
+	@$(CC) $(CFLAGS) -o $@ -c ordpat.c
 
 clean:
 	@$(RM) *.o
 
 distclean: clean
-	@$(RM) $(LIBRARY_NAME).*
+	@$(RM) $(LIB_NAME).*
 
 install: $(TARGET)
 ifndef WIN32
@@ -155,7 +163,7 @@ ifndef WIN32
 	@install --mode=644 ./ordpat.h $(PREFIX)/include/
 	@install -d $(PREFIX)/lib/
 	@install $(TARGET) $(PREFIX)/lib/
-	@ln -fs $(PREFIX)/lib/$(TARGET) $(PREFIX)/lib/$(LIBRARY_NAME).so
+	@ln -fs $(PREFIX)/lib/$(TARGET) $(PREFIX)/lib/$(LIB_NAME).so
 	@ldconfig
 endif
 
@@ -163,11 +171,10 @@ uninstall:
 ifndef WIN32
 	@$(RM) $(PREFIX)/include/ordpat.h
 	@$(RM) $(PREFIX)/lib/$(TARGET)
-	@if ! [ -e $$(readlink $(PREFIX)/lib/$(LIBRARY_NAME).so) ]; then \
-	$(RM) $(PREFIX)/lib/$(LIBRARY_NAME).so; \
+	@if ! [ -e $$(readlink $(PREFIX)/lib/$(LIB_NAME).so) ]; then \
+	$(RM) $(PREFIX)/lib/$(LIB_NAME).so; \
 	fi
 	@ldconfig
 endif
 
-.DEFAULT_GOAL := $(TARGET)
 .PHONY: clean distclean install uninstall
