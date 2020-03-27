@@ -57,84 +57,84 @@ override undefine OSX
 override undefine WIN32
 
 ifeq ($(OS), Windows_NT)
-WIN32 := 1
+    WIN32 := 1
 else
-KERNEL := $(shell uname -s)
-ifeq ($(KERNEL), Darwin)
-OSX := 1
-endif
-ifeq ($(KERNEL), Linux)
-LINUX := 1
-endif
+    KERNEL := $(shell uname -s)
+    ifeq ($(KERNEL), Darwin)
+        OSX := 1
+    endif
+    ifeq ($(KERNEL), Linux)
+        LINUX := 1
+    endif
 endif
 
 ifdef WIN32
-RM := del /F 2> NUL
+    RM := del /F 2> NUL
 else
-RM := rm -f
+    RM := rm -f
 endif
 
 # Configuration
-CC              := gcc
-PREFIX          ?= /usr/local
-LIBRARY_NAME    := libordpat
+CC := gcc
+PREFIX ?= /usr/local
+LIBRARY_NAME := libordpat
 
 ifdef WIN32
-TARGET          := $(LIBRARY_NAME).dll
-SHORTNAME       := $(TARGET)
+    TARGET := $(LIBRARY_NAME).dll
+    SHORTNAME := $(TARGET)
 endif
 
 ifdef OSX
-TARGET          := $(LIBRARY_NAME).dylib
-SHORTNAME       := $(TARGET)
+    TARGET := $(LIBRARY_NAME).dylib
+    SHORTNAME := $(TARGET)
 endif
 
 ifdef LINUX
-TARGET          := $(LIBRARY_NAME).so.$(LIB_VER)
-SHORTNAME       := $(LIBRARY_NAME).so.$(MAJ_VER)
+    TARGET := $(LIBRARY_NAME).so.$(LIB_VER)
+    SHORTNAME := $(LIBRARY_NAME).so.$(MAJ_VER)
 endif
 
 ifndef TARGET
-$(error Unsupported target platform)
+    $(error Unsupported target platform)
 endif
 
-CFLAGS          := -std=c99 -fPIC -Wall -Wextra -pedantic -DBUILD_LIBORDPAT
-CFLAGS_DEBUG    := -g
-CFLAGS_RELEASE  := -O3 -fvisibility=hidden
+CFLAGS := -std=c99 -fPIC -Wall -Wextra -pedantic -DBUILD_LIBORDPAT
+CFLAGS_DEBUG := -g
+CFLAGS_RELEASE := -O3 -fvisibility=hidden
 
 ifdef OSX
-LDFLAGS         := -dynamiclib -current_version $(LIB_VER) \
-                   -compatibility_version $(MAJ_VER)
-LDFLAGS_RELEASE := -O3
+    LDFLAGS := -dynamiclib -current_version $(LIB_VER) \
+               -compatibility_version $(MAJ_VER)
+    LDFLAGS_RELEASE := -O3
 else
-LDFLAGS         := -shared -Wl,-soname,$(LIBRARY_NAME).so.$(MAJ_VER)
-LDFLAGS_RELEASE := -O3 -s
+    LDFLAGS := -shared -Wl,-soname,$(LIBRARY_NAME).so.$(MAJ_VER)
+    LDFLAGS_RELEASE := -O3 -s
 endif
 
-LDFLAGS_DEBUG   := -g
+LDFLAGS_DEBUG := -g
 
 # Architecture
 ARCH ?= x64
 ifeq ($(ARCH), x86)
-CFLAGS  += -m32
-LDFLAGS += -m32
+    CFLAGS += -m32
+    LDFLAGS += -m32
 else
-ifeq ($(ARCH), x64)
-CFLAGS  += -m64
-LDFLAGS += -m64
-else
-$(error Unsupported target architecture: '$(ARCH)')
-endif
+    ifeq ($(ARCH), x64)
+        CFLAGS += -m64
+        LDFLAGS += -m64
+    else
+        $(error Unsupported target architecture: '$(ARCH)')
+    endif
 endif
 
 # Debug/Release
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
-CFLAGS  += $(CFLAGS_DEBUG)
-LDFLAGS += $(LDFLAGS_DEBUG)
+    CFLAGS += $(CFLAGS_DEBUG)
+    LDFLAGS += $(LDFLAGS_DEBUG)
 else
-CFLAGS  += $(CFLAGS_RELEASE)
-LDFLAGS += $(LDFLAGS_RELEASE)
+    CFLAGS += $(CFLAGS_RELEASE)
+    LDFLAGS += $(LDFLAGS_RELEASE)
 endif
 
 # Targets
