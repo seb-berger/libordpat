@@ -62,9 +62,12 @@ else
     KERNEL := $(shell uname -s)
     ifeq ($(KERNEL), Darwin)
         OSX := 1
-    endif
-    ifeq ($(KERNEL), Linux)
-        LINUX := 1
+    else
+        ifeq ($(KERNEL), Linux)
+            LINUX := 1
+        else
+            $(error Unsupported target platform: '$(KERNEL)')
+        endif
     endif
 endif
 
@@ -92,10 +95,6 @@ endif
 ifdef LINUX
     TARGET := $(LIBRARY_NAME).so.$(LIB_VER)
     SHORTNAME := $(LIBRARY_NAME).so.$(MAJ_VER)
-endif
-
-ifndef TARGET
-    $(error Unsupported target platform)
 endif
 
 CFLAGS := -std=c99 -fPIC -Wall -Wextra -pedantic -DBUILD_LIBORDPAT
