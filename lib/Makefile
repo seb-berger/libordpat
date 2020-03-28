@@ -51,7 +51,7 @@ DEBUG     ?= 0
 CFLAGS    := -std=c99 -Wall -Wextra -pedantic
 LDFLAGS   := # will be populated below
 LIB_NAME  := libordpat
-LIB_OBJ   := ordpat.o
+LIB_OBJS  := ordpat.o
 MAKEFLAGS := rR # do not use built-in rules or variables
 MAJ_VER   := 0
 MIN_VER   := 1
@@ -61,7 +61,7 @@ LIB_VER   := $(MAJ_VER).$(MIN_VER).$(REV_VER)
 
 # Prepare Build Environment ####################################################
 
-$(LIB_OBJ): CFLAGS += -DBUILD_LIBORDPAT
+$(LIB_OBJS): CFLAGS += -DBUILD_LIBORDPAT
 
 # Architecture
 ifeq ($(ARCH), x86)
@@ -109,11 +109,11 @@ endif
 ifdef LINUX
     TARGET := $(LIB_NAME).so.$(LIB_VER)
     SHORTNAME := $(LIB_NAME).so.$(MAJ_VER)
-    $(LIB_OBJ): CFLAGS  += -fPIC
-    $(TARGET):  LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
+    $(LIB_OBJS): CFLAGS += -fPIC
+    $(TARGET): LDFLAGS += -shared -Wl,-soname,$(LIB_NAME).so.$(MAJ_VER)
 
     ifneq ($(DEBUG), 1)
-        $(LIB_OBJ): CFLAGS += -fvisibility=hidden
+        $(LIB_OBJS): CFLAGS += -fvisibility=hidden
         $(TARGET): LDFLAGS += -s
     endif
 
@@ -124,12 +124,12 @@ endif
 ifdef MACOS
     TARGET := $(LIB_NAME).dylib
     SHORTNAME := $(TARGET)
-    $(LIB_OBJ): CFLAGS  += -fPIC
-    $(TARGET):  LDFLAGS += -dynamiclib -current_version $(LIB_VER) \
-                           -compatibility_version $(MAJ_VER)
+    $(LIB_OBJS): CFLAGS += -fPIC
+    $(TARGET): LDFLAGS += -dynamiclib -current_version $(LIB_VER) \
+                          -compatibility_version $(MAJ_VER)
 
     ifneq ($(DEBUG), 1)
-        $(LIB_OBJ): CFLAGS += -fvisibility=hidden
+        $(LIB_OBJS): CFLAGS += -fvisibility=hidden
     endif
 
     RM := rm -f
@@ -153,14 +153,14 @@ endif
 
 .DEFAULT_GOAL := $(TARGET)
 
-$(TARGET): $(LIB_OBJ)
+$(TARGET): $(LIB_OBJS)
 	@$(CC) $(LDFLAGS) -o $@ $?
 
 ordpat.o: ordpat.c ordpat.h
 	@$(CC) $(CFLAGS) -o $@ -c ordpat.c
 
 clean:
-	@$(RM) $(LIB_OBJ)
+	@$(RM) $(LIB_OBJS)
 
 distclean: clean
 	@$(RM) $(TARGET)
